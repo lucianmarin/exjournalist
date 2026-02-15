@@ -49,13 +49,13 @@ class NormalizeHeadingsTreeprocessor(Treeprocessor):
     def run(self, root):
         for element in root.iter():
             if element.tag in {"h1", "h2", "h4", "h5", "h6"}:
-                element.tag = "h3"
+                element.tag = "h4"
         return root
 
 
 class NormalizeHeadingsExtension(Extension):
     def extendMarkdown(self, md):
-        md.treeprocessors.register(NormalizeHeadingsTreeprocessor(md), "normalize_headings_to_h3", 15)
+        md.treeprocessors.register(NormalizeHeadingsTreeprocessor(md), "normalize_headings_to_h4", 15)
 
 
 def markdown_filter(text: str) -> Markup:

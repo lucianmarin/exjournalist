@@ -51,18 +51,19 @@ input, textarea, button, select {
 }
 
 .container {
-  width: min(720px, 92vw);
+  width: min(720px, 90%);
   margin: 0 auto;
 }
 
 .site-header {
-  padding: 1rem 0;
-  margin-bottom: 1.5rem;
+  padding-top: 15px;
+  padding-bottom: 25px;
 }
 
 .site-header h1 {
-  font-size: 32px;
-  line-height: 40px;
+  font-size: 25px;
+  line-height: 30px;
+  margin-top: 15px;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -114,9 +115,9 @@ input, textarea, button, select {
   text-decoration: none;
 }
 
-.card h2 {
-  font-size: 24px;
-  line-height: 30px;
+.card h2, .card .big {
+  font-size: 20px;
+  line-height: 25px;
 }
 
 .card h2 a.category {
@@ -130,8 +131,6 @@ input, textarea, button, select {
 }
 
 .card .big {
-  font-size: 24px;
-  line-height: 30px;
   margin-left: 5px;
   text-align: right;
 }
@@ -227,8 +226,13 @@ button[type="submit"] {
   padding-left: 13px;
 }
 
-.markdown-body p {
-  margin: 0.35rem 0 0.7rem;
+.markdown-body h4 {
+  font-size: var(--regular);
+  line-height: 20px;
+}
+
+.markdown-body h4, .markdown-body p {
+  margin: 10px 0;
 }
 
 .user-description {
