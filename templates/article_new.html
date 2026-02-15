@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}New Article{% endblock %}
+
+{% block content %}
+<article class="card">
+  <h2>Create Article</h2>
+
+  <form method="post" action="/articles/new" class="form-grid">
+    <p class="hint">Writing as {{ current_user.emoji }} @{{ current_user.username }}</p>
+
+    <label>Title
+      <input type="text" name="title" required maxlength="255">
+    </label>
+
+    <label>Content (Markdown)
+      <textarea name="content_markdown" rows="14" required></textarea>
+    </label>
+
+    <label>Category
+      <input type="text" name="category_name" placeholder="tech" required>
+    </label>
+
+    <p class="hint">Category supports letters only (`a-z`) and is stored in lowercase.</p>
+
+    <button type="submit">Publish</button>
+  </form>
+</article>
+{% endblock %}

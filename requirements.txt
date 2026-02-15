@@ -1,0 +1,8 @@
+falcon
+django
+gunicorn
+jinja2
+markdown
+python-dotenv
+psycopg2-binary
+cryptography

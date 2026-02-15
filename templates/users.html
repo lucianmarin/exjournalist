@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<section>
+  {% if users %}
+    {% for user in users %}
+      <article class="card">
+        <h2><a href="/users/{{ user.username }}">{{ user.emoji }} @{{ user.username }}</a></h2>
+        <div class="meta">
+          <span>{{ user.full_name }}</span>
+        </div>
+        {% if user.description_markdown %}
+          <div class="markdown-body">{{ user.description_markdown | markdown }}</div>
+        {% endif %}
+      </article>
+    {% endfor %}
+  {% else %}
+    <p>No users yet. <a href="/users/new">Create one</a>.</p>
+  {% endif %}
+</section>
+{% endblock %}

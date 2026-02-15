@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Create User{% endblock %}
+
+{% block content %}
+<article class="card">
+  <h2>Create User</h2>
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+  <form method="post" action="/users/new" class="form-grid">
+    <label>Username
+      <input type="text" name="username" maxlength="50" required value="{{ form.username if form else '' }}">
+    </label>
+
+    <label>Password
+      <input type="password" name="password" minlength="8" required>
+    </label>
+
+    <label>Emoji
+      <input type="text" name="emoji" maxlength="10" placeholder="📝" required value="{{ form.emoji if form else '' }}">
+    </label>
+
+    <label>Full name
+      <input type="text" name="full_name" maxlength="120" required value="{{ form.full_name if form else '' }}">
+    </label>
+
+    <label>Email address
+      <input type="email" name="email" maxlength="255" required value="{{ form.email if form else '' }}">
+    </label>
+
+    <label>Description (Markdown)
+      <textarea name="description_markdown" rows="8" placeholder="Tell readers about yourself.">{{ form.description_markdown if form else '' }}</textarea>
+    </label>
+
+    <button type="submit">Create User</button>
+  </form>
+</article>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% macro render_comments(article_id, comment_list, current_user) %}
+  {% for comment in comment_list %}
+    <article class="comment">
+      <div class="meta">
+        <strong>{{ comment.author.emoji }} @{{ comment.author.username }}</strong>
+        <span>{{ comment.author.full_name }}</span>
+        <span>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+      </div>
+      <div class="markdown-body">{{ comment.content_markdown | markdown }}</div>
+
+      {% if current_user %}
+        <details>
+          <summary>Reply</summary>
+          <form method="post" action="/articles/{{ article_id }}/comments" class="form-grid">
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            <p class="hint">Replying as {{ current_user.emoji }} @{{ current_user.username }}</p>
+            <label>Reply (Markdown)
+              <textarea name="content_markdown" rows="3" required></textarea>
+            </label>
+            <button type="submit">Post Reply</button>
+          </form>
+        </details>
+      {% endif %}
+
+      {% if comment.nested_children %}
+        <div class="children">
+          {{ render_comments(article_id, comment.nested_children, current_user) }}
+        </div>
+      {% endif %}
+    </article>
+  {% endfor %}
+{% endmacro %}

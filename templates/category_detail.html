@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}#{{ category.name }}{% endblock %}
+
+{% block content %}
+<article class="card">
+  <h2>Category: {{ category.name }}</h2>
+</article>
+
+<section>
+  <h3>Articles in {{ category.name }}</h3>
+  {% if articles %}
+    {% for article in articles %}
+      <article class="card">
+        <h2><a href="/articles/{{ article.id }}">{{ article.title }}</a></h2>
+        <div class="meta">
+          <span>{{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+          <a href="/users/{{ article.author.username }}">{{ article.author.emoji }} @{{ article.author.username }}</a>
+          <span>👍 {{ article.likes_count }}</span>
+          <span>👎 {{ article.dislikes_count }}</span>
+        </div>
+      </article>
+    {% endfor %}
+  {% else %}
+    <p>No articles in this category yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

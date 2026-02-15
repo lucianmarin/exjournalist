@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Edit Article{% endblock %}
+
+{% block content %}
+<article class="card">
+  <h2>Edit Article</h2>
+
+  <form method="post" action="/articles/{{ article.id }}/edit" class="form-grid">
+    <p class="hint">Editing as {{ current_user.emoji }} @{{ current_user.username }}</p>
+
+    <label>Title
+      <input type="text" name="title" required maxlength="255" value="{{ article.title }}">
+    </label>
+
+    <label>Content (Markdown)
+      <textarea name="content_markdown" rows="14" required>{{ article.content_markdown }}</textarea>
+    </label>
+
+    <label>Category
+      <input type="text" name="category_name" required value="{{ article.category.name }}">
+    </label>
+
+    <p class="hint">Category supports letters only (`a-z`) and is stored in lowercase.</p>
+
+    <button type="submit">Save Changes</button>
+  </form>
+</article>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Exjournalist{% endblock %}
+
+{% block content %}
+<section>
+  {% if articles %}
+    {% for article in articles %}
+      <article class="card">
+        <h2><a href="/articles/{{ article.id }}">{{ article.title }}</a></h2>
+        <div class="meta">
+          <span>{{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+          <a href="/users/{{ article.author.username }}">{{ article.author.emoji }} @{{ article.author.username }}</a>
+          <span>👍 {{ article.likes_count }}</span>
+          <span>👎 {{ article.dislikes_count }}</span>
+          <a href="/categories/{{ article.category.name }}" class="tag">{{ article.category.name }}</a>
+        </div>
+      </article>
+    {% endfor %}
+  {% else %}
+    <p>No articles yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Exjournalist{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <nav>
+        {% if current_user %}
+          <span class="auth-user">{{ current_user.emoji }} @{{ current_user.username }} · Karma: {{ current_user_karma }}</span>
+          <form method="post" action="/logout" class="inline-form">
+            <button type="submit">Logout</button>
+          </form>
+        {% else %}
+          <a href="/users/new">Create User</a>
+          <a href="/login">Login</a>
+        {% endif %}
+      </nav>
+      <h1>
+        <a href="/">Exjournalist</a>
+        <a href="/users">Users</a>
+        <a href="/articles/new">Write</a>
+      </h1>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
