@@ -444,7 +444,7 @@ class UserNewResource:
             if User.objects.filter(email=email).exists():
                 raise falcon.HTTPBadRequest(description="Email already exists")
 
-            User.objects.create(
+            user = User.objects.create(
                 username=username,
                 password_hash=make_password(password),
                 emoji=emoji,
@@ -452,6 +452,7 @@ class UserNewResource:
                 email=email,
                 description_markdown=description_markdown,
             )
+            set_auth_cookie(resp, user.id)
             raise falcon.HTTPSeeOther(location="/")
         except falcon.HTTPBadRequest as exc:
             resp.status = falcon.HTTP_400
