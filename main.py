@@ -13,6 +13,7 @@ from cryptography.fernet import Fernet, InvalidToken
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from django.db.models import Count, OuterRef, Q, Subquery, Sum
+from django.utils import timezone
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup
 from markdown.extensions import Extension
@@ -65,7 +66,50 @@ def markdown_filter(text: str) -> Markup:
     return Markup(html)
 
 
+def time_ago_filter(value) -> str:
+    if value is None:
+        return ""
+
+    now = timezone.now()
+    delta_seconds = int((now - value).total_seconds())
+    if delta_seconds <= 0:
+        return "just now"
+
+    if delta_seconds < 60:
+        return "just now"
+
+    minutes = delta_seconds // 60
+    if minutes < 60:
+        unit = "minute" if minutes == 1 else "minutes"
+        return f"{minutes} {unit} ago"
+
+    hours = minutes // 60
+    if hours < 24:
+        unit = "hour" if hours == 1 else "hours"
+        return f"{hours} {unit} ago"
+
+    days = hours // 24
+    if days < 7:
+        unit = "day" if days == 1 else "days"
+        return f"{days} {unit} ago"
+
+    weeks = days // 7
+    if days < 30:
+        unit = "week" if weeks == 1 else "weeks"
+        return f"{weeks} {unit} ago"
+
+    months = days // 30
+    if days < 365:
+        unit = "month" if months == 1 else "months"
+        return f"{months} {unit} ago"
+
+    years = days // 365
+    unit = "year" if years == 1 else "years"
+    return f"{years} {unit} ago"
+
+
 templates.filters["markdown"] = markdown_filter
+templates.filters["time_ago"] = time_ago_filter
 
 
 def render_html(req: falcon.Request, resp: falcon.Response, template_name: str, context: dict) -> None:

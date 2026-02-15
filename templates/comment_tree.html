@@ -4,7 +4,7 @@
       <div class="meta">
         <strong>{{ comment.author.emoji }} @{{ comment.author.username }}</strong>
         <span>{{ comment.author.full_name }}</span>
-        <span>{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        <span>{{ comment.created_at | time_ago }}</span>
       </div>
       <div class="markdown-body">{{ comment.content_markdown | markdown }}</div>
 
