@@ -416,6 +416,7 @@ class UserNewResource:
         data = get_form_data(req)
         username = (data.get("username") or "").strip()
         password = data.get("password") or ""
+        password_confirm = data.get("password_confirm") or ""
         full_name = (data.get("full_name") or "").strip()
         email = (data.get("email") or "").strip().lower()
         description_markdown = (data.get("description_markdown") or "").strip()
@@ -433,6 +434,10 @@ class UserNewResource:
 
             if not username or not password or not emoji or not full_name or not email:
                 raise falcon.HTTPBadRequest(description="All user fields are required")
+            if password != password_confirm:
+                raise falcon.HTTPBadRequest(description="Password and confirmation must match")
+            if len(password) < 8:
+                raise falcon.HTTPBadRequest(description="Password must be at least 8 characters")
 
             if User.objects.filter(username=username).exists():
                 raise falcon.HTTPBadRequest(description="Username already exists")
@@ -447,10 +452,79 @@ class UserNewResource:
                 email=email,
                 description_markdown=description_markdown,
             )
-            raise falcon.HTTPSeeOther(location="/users")
+            raise falcon.HTTPSeeOther(location="/")
         except falcon.HTTPBadRequest as exc:
             resp.status = falcon.HTTP_400
             render_html(req, resp, "user_new.html", {"error": exc.description, "form": form})
+
+
+class SettingsResource:
+    def on_get(self, req: falcon.Request, resp: falcon.Response) -> None:
+        current_user = get_current_user(req)
+        if current_user is None:
+            raise falcon.HTTPSeeOther(location="/login?next=/settings")
+
+        form = {
+            "username": current_user.username,
+            "emoji": current_user.emoji,
+            "full_name": current_user.full_name,
+            "description_markdown": current_user.description_markdown or "",
+        }
+        render_html(req, resp, "settings.html", {"form": form})
+
+    def on_post(self, req: falcon.Request, resp: falcon.Response) -> None:
+        current_user = get_current_user(req)
+        if current_user is None:
+            raise falcon.HTTPSeeOther(location="/login?next=/settings")
+
+        data = get_form_data(req)
+        username = (data.get("username") or "").strip()
+        emoji_raw = (data.get("emoji") or "").strip()
+        full_name = (data.get("full_name") or "").strip()
+        description_markdown = (data.get("description_markdown") or "").strip()
+        password = data.get("password") or ""
+        password_confirm = data.get("password_confirm") or ""
+
+        form = {
+            "username": username,
+            "emoji": emoji_raw,
+            "full_name": full_name,
+            "description_markdown": description_markdown,
+        }
+
+        try:
+            emoji = validate_single_emoji(emoji_raw)
+            if not username or not full_name:
+                raise falcon.HTTPBadRequest(description="Username, full name, and emoji are required")
+
+            username_taken = (
+                User.objects.filter(username=username)
+                .exclude(id=current_user.id)
+                .exists()
+            )
+            if username_taken:
+                raise falcon.HTTPBadRequest(description="Username already exists")
+
+            if password or password_confirm:
+                if password != password_confirm:
+                    raise falcon.HTTPBadRequest(description="Password and confirmation must match")
+                if len(password) < 8:
+                    raise falcon.HTTPBadRequest(description="Password must be at least 8 characters")
+
+            update_fields = ["username", "emoji", "full_name", "description_markdown"]
+            current_user.username = username
+            current_user.emoji = emoji
+            current_user.full_name = full_name
+            current_user.description_markdown = description_markdown
+            if password:
+                current_user.password_hash = make_password(password)
+                update_fields.append("password_hash")
+            current_user.save(update_fields=update_fields)
+
+            raise falcon.HTTPSeeOther(location=f"/users/{current_user.username}")
+        except falcon.HTTPBadRequest as exc:
+            resp.status = falcon.HTTP_400
+            render_html(req, resp, "settings.html", {"error": exc.description, "form": form})
 
 
 class ArticleNewResource:
@@ -669,6 +743,7 @@ class ArticleCommentResource:
 
 app.add_route("/", IndexResource())
 app.add_route("/search", SearchResource())
+app.add_route("/settings", SettingsResource())
 app.add_route("/users/{username}", UserDetailResource())
 app.add_route("/categories/{name}", CategoryDetailResource())
 app.add_route("/login", LoginResource())

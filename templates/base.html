@@ -14,9 +14,9 @@
           <a href="/users/{{ current_user.username }}">
             {{ current_user.emoji }} @{{ current_user.username }}
           </a>
-          <span class="auth-user">
+          <a href="/settings">
             Karma: {{ current_user_karma }}
-          </span>
+          </a>
           <form method="post" action="/logout" class="inline-form">
             <button type="submit">Logout</button>
           </form>

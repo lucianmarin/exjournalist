@@ -16,6 +16,10 @@
       <input type="password" name="password" minlength="8" required>
     </label>
 
+    <label>Confirm password
+      <input type="password" name="password_confirm" minlength="8" required>
+    </label>
+
     <label>Emoji
       <input type="text" name="emoji" maxlength="10" placeholder="📝" required value="{{ form.emoji if form else '' }}">
     </label>
