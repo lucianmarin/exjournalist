@@ -279,7 +279,7 @@ class IndexResource:
             Article.objects.select_related("author")
             .select_related("category")
             .annotate(comment_count=Count("comments"))
-            .order_by("-created_at")
+            .order_by("-comment_count", "-created_at")
         )
 
         render_html(
@@ -459,7 +459,7 @@ class ArticleNewResource:
         if current_user is None:
             raise falcon.HTTPSeeOther(location="/login?next=/articles/new")
 
-        render_html(req, resp, "article_new.html", {})
+        render_html(req, resp, "article_new.html", {"form": {}})
 
     def on_post(self, req: falcon.Request, resp: falcon.Response) -> None:
         current_user = get_current_user(req)
@@ -471,22 +471,31 @@ class ArticleNewResource:
         content_markdown = (data.get("content_markdown") or "").strip()
         category_name = (data.get("category_name") or "").strip()
 
-        if not title or not content_markdown:
-            raise falcon.HTTPBadRequest(description="Title and content are required")
+        form = {
+            "title": title,
+            "category_name": category_name,
+            "content_markdown": content_markdown,
+        }
 
-        if not category_name:
-            raise falcon.HTTPBadRequest(description="Category is required")
+        try:
+            if not title or not content_markdown:
+                raise falcon.HTTPBadRequest(description="Title and content are required")
 
-        category, _ = Category.objects.get_or_create(name=normalize_category_name(category_name))
+            if not category_name:
+                raise falcon.HTTPBadRequest(description="Category is required")
 
-        article = Article.objects.create(
-            author=current_user,
-            category=category,
-            title=title,
-            content_markdown=content_markdown,
-        )
+            category, _ = Category.objects.get_or_create(name=normalize_category_name(category_name))
 
-        raise falcon.HTTPSeeOther(location=f"/articles/{article.id}")
+            article = Article.objects.create(
+                author=current_user,
+                category=category,
+                title=title,
+                content_markdown=content_markdown,
+            )
+            raise falcon.HTTPSeeOther(location=f"/articles/{article.id}")
+        except falcon.HTTPBadRequest as exc:
+            resp.status = falcon.HTTP_400
+            render_html(req, resp, "article_new.html", {"error": exc.description, "form": form})
 
 
 class ArticleDetailResource:

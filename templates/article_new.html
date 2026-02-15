@@ -2,20 +2,23 @@
 {% block title %}New Article{% endblock %}
 
 {% block content %}
-<article>
+<article class="card">
   <h2>Create Article</h2>
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
 
   <form method="post" action="/articles/new" class="form-grid">
     <label>Title
-      <input type="text" name="title" required maxlength="255">
+      <input type="text" name="title" required maxlength="255" value="{{ form.title if form else '' }}">
     </label>
 
     <label>Category
-      <input type="text" name="category_name" placeholder="tech" required>
+      <input type="text" name="category_name" placeholder="tech" required value="{{ form.category_name if form else '' }}">
     </label>
 
     <label>Content (Markdown)
-      <textarea name="content_markdown" rows="14" required></textarea>
+      <textarea name="content_markdown" rows="14" required>{{ form.content_markdown if form else '' }}</textarea>
     </label>
 
     <button type="submit">Publish</button>

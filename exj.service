@@ -1,0 +1,23 @@
+[Unit]
+Description=Exjournalist service
+After=network.target nginx.service postgresql.service pgbouncer.service
+
+[Service]
+User=lucian
+Group=lucian
+PIDFile=/home/lucian/exjournalist/exj.pid
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/lucian/exjournalist
+ExecStart=/home/lucian/exjournalist/venv/bin/gunicorn main:app
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target
+
+# sudo cp exj.service /etc/systemd/system/exj.service
+# sudo systemctl daemon-reload
+# sudo systemctl restart exj.service
+# start on boot
+# sudo systemctl enable exj.service
