@@ -6,8 +6,6 @@
   <h2>Edit Article</h2>
 
   <form method="post" action="/articles/{{ article.id }}/edit" class="form-grid">
-    <p class="hint">Editing as {{ current_user.emoji }} @{{ current_user.username }}</p>
-
     <label>Title
       <input type="text" name="title" required maxlength="255" value="{{ article.title }}">
     </label>
