@@ -1,15 +1,26 @@
-:root {
+html {
   --regular: 16px;
   --bg: #f0f0f0;
-  --card: #ffffff;
-  --line: #e4e8ef;
-  --text: #1a2433;
+  --line: #e0e0e0;
   --muted: #808080;
   --primary: orangered;
-  --like: #1c8d3d;
-  --dislike: #b33a3a;
+  --like: green;
+  --dislike: darkred;
   --black: #000;
   --white: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    --bg: #202020;
+    --line: #404040;
+    --muted: #808080;
+    --primary: orangered;
+    --like: green;
+    --dislike: darkred;
+    --black: #fff;
+    --white: #000;
+  }
 }
 
 * {
@@ -22,7 +33,7 @@
 body {
   margin: 0;
   background: var(--bg);
-  color: var(--text);
+  color: var(--black);
   font-size: var(--regular);
   font-family: serif;
   line-height: 20px;
@@ -52,6 +63,8 @@ input, textarea, button, select {
 .site-header h1 {
   font-size: 32px;
   line-height: 40px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .site-header a {
@@ -90,6 +103,10 @@ input, textarea, button, select {
   border-bottom: 2px solid var(--black);
   padding: 10px 0;
   margin-bottom: 10px;
+}
+
+.card:last-child {
+  border-bottom: 0 none;
 }
 
 .card h2 a {
@@ -141,7 +158,6 @@ select {
 }
 
 button {
-  border: 1px solid var(--primary);
   color: var(--white);
   background: var(--primary);
   padding: 5px 0;
@@ -165,22 +181,31 @@ button[type="submit"] {
   padding: 5px 10px;
 }
 
-.votes {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.6rem;
+.votes form {
+  overflow: hidden;
+}
+
+.votes button {
+  padding-top: 10px;
+  margin-left: 10px;
 }
 
 .vote-btn {
-  border-color: var(--line);
-  background: #f0f4fa;
-  color: var(--text);
+  background: var(--white);
+  color: var(--black);
 }
 
 .vote-btn.active-like {
-  border-color: var(--like);
   color: #fff;
   background: var(--like);
+}
+
+.vote-btn.active-like svg path {
+  stroke: var(--like);
+}
+
+.vote-btn.active-dislike svg path {
+  stroke: var(--dislike);
 }
 
 .vote-btn.active-dislike {

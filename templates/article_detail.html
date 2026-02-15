@@ -5,6 +5,8 @@
 {% block content %}
 {% include "article_card.html" %}
 
+<div class="markdown-body">{{ article.content_markdown | markdown }}</div>
+
 {% if current_user and current_user.id != article.author_id %}
   <section class="votes">
     <form method="post" action="/articles/{{ article.id }}/vote">
@@ -21,8 +23,6 @@
     </form>
   </section>
 {% endif %}
-
-<div class="markdown-body">{{ article.content_markdown | markdown }}</div>
 
 <section id="comments">
   {% if current_user %}
