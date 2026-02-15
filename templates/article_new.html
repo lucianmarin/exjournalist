@@ -2,12 +2,10 @@
 {% block title %}New Article{% endblock %}
 
 {% block content %}
-<article class="card">
+<article>
   <h2>Create Article</h2>
 
   <form method="post" action="/articles/new" class="form-grid">
-    <p class="hint">Writing as {{ current_user.emoji }} @{{ current_user.username }}</p>
-
     <label>Title
       <input type="text" name="title" required maxlength="255">
     </label>

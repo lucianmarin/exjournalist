@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<section>
+  <article class="card">
+    <h2>Search Articles</h2>
+    <form method="get" action="/search" class="form-grid">
+      <label>Search title and content
+        <input
+          type="search"
+          name="q"
+          value="{{ query }}"
+          placeholder="Try a keyword"
+          maxlength="255"
+        >
+      </label>
+      <button type="submit">Search</button>
+    </form>
+  </article>
+
+  {% if query %}
+    {% if articles %}
+      <p class="meta">{{ articles|length }} result{{ "s" if articles|length != 1 else "" }} for "{{ query }}"</p>
+      {% for article in articles %}
+        {% include "article_card.html" %}
+      {% endfor %}
+    {% else %}
+      <p>No articles matched "{{ query }}".</p>
+    {% endif %}
+  {% else %}
+    <p class="meta">Latest article from each user</p>
+    {% for article in articles %}
+      {% include "article_card.html" %}
+    {% else %}
+      <p>No articles yet.</p>
+    {% endfor %}
+  {% endif %}
+</section>
+{% endblock %}

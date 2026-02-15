@@ -12,7 +12,7 @@ import markdown
 from cryptography.fernet import Fernet, InvalidToken
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
-from django.db.models import Count, Sum
+from django.db.models import Count, OuterRef, Q, Subquery, Sum
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup
 from markdown.extensions import Extension
@@ -248,10 +248,43 @@ class IndexResource:
         )
 
 
-class UsersResource:
+class SearchResource:
     def on_get(self, req: falcon.Request, resp: falcon.Response) -> None:
-        users = list(User.objects.all().order_by("username"))
-        render_html(req, resp, "users.html", {"users": users})
+        query = (req.get_param("q") or "").strip()
+        if query:
+            articles = list(
+                Article.objects.filter(
+                    Q(title__icontains=query) | Q(content_markdown__icontains=query)
+                )
+                .select_related("author")
+                .select_related("category")
+                .annotate(comment_count=Count("comments"))
+                .order_by("-created_at")
+            )
+        else:
+            latest_article_id_per_author = (
+                Article.objects.filter(author_id=OuterRef("author_id"))
+                .order_by("-created_at", "-id")
+                .values("id")[:1]
+            )
+
+            articles = list(
+                Article.objects.filter(id=Subquery(latest_article_id_per_author))
+                .select_related("author")
+                .select_related("category")
+                .annotate(comment_count=Count("comments"))
+                .order_by("-created_at", "-id")
+            )
+
+        render_html(
+            req,
+            resp,
+            "search.html",
+            {
+                "query": query,
+                "articles": articles,
+            },
+        )
 
 
 class UserDetailResource:
@@ -582,7 +615,7 @@ class ArticleCommentResource:
 
 
 app.add_route("/", IndexResource())
-app.add_route("/users", UsersResource())
+app.add_route("/search", SearchResource())
 app.add_route("/users/{username}", UserDetailResource())
 app.add_route("/categories/{name}", CategoryDetailResource())
 app.add_route("/login", LoginResource())

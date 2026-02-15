@@ -4,7 +4,7 @@
   --card: #ffffff;
   --line: #e4e8ef;
   --text: #1a2433;
-  --muted: #5f6f86;
+  --muted: #808080;
   --primary: orangered;
   --like: #1c8d3d;
   --dislike: #b33a3a;
@@ -120,11 +120,8 @@ input, textarea, button, select {
 }
 
 .card .small, .meta {
-  margin-top: 10px;
-}
-
-.meta {
   color: var(--muted);
+  margin-top: 10px;
 }
 
 .categories {
@@ -139,7 +136,6 @@ input,
 textarea,
 select {
   width: 100%;
-  margin-top: 10px;
   padding: 5px 10px;
   background-color: var(--white);
 }
@@ -150,6 +146,18 @@ button {
   background: var(--primary);
   padding: 5px 0;
   cursor: pointer;
+}
+
+label {
+  display: block;
+}
+
+.form-grid label, .form-grid input, .form-grid textarea, .form-grid select {
+  margin-top: 10px;
+}
+
+.form-grid button[type="submit"] {
+  margin-top: 10px;
 }
 
 button[type="submit"] {
