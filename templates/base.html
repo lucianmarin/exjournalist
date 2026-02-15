@@ -29,9 +29,9 @@
         {% endif %}
       </nav>
       <h1>
-        <a href="/" class="active">Exjournalist</a>
-        <a href="/search">Search</a>
-        <a href="/articles/new">Write</a>
+        <a href="/" class="{% if view == 'index' %}active{% endif %}">Exjournalist</a>
+        <a href="/search" class="{% if view == 'search' %}active{% endif %}">Search</a>
+        <a href="/articles/new" class="{% if view == 'new_article' %}active{% endif %}">Write</a>
       </h1>
     </div>
   </header>

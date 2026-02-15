@@ -290,6 +290,7 @@ class IndexResource:
             "index.html",
             {
                 "articles": articles,
+                "view": "index",
             },
         )
 
@@ -329,6 +330,7 @@ class SearchResource:
             {
                 "query": query,
                 "articles": articles,
+                "view": "search",
             },
         )
 
@@ -536,7 +538,7 @@ class ArticleNewResource:
         if current_user is None:
             raise falcon.HTTPSeeOther(location="/login?next=/articles/new")
 
-        render_html(req, resp, "article_new.html", {"form": {}})
+        render_html(req, resp, "article_new.html", {"form": {}, "view": "new_article"})
 
     def on_post(self, req: falcon.Request, resp: falcon.Response) -> None:
         current_user = get_current_user(req)
@@ -572,7 +574,12 @@ class ArticleNewResource:
             raise falcon.HTTPSeeOther(location=f"/articles/{article.id}")
         except falcon.HTTPBadRequest as exc:
             resp.status = falcon.HTTP_400
-            render_html(req, resp, "article_new.html", {"error": exc.description, "form": form})
+            render_html(
+                req, resp, "article_new.html", {
+                    "error": exc.description,
+                    "form": form,
+                    "view": "new_article"
+            })
 
 
 class ArticleDetailResource:
