@@ -2,11 +2,11 @@ import os
 from pathlib import Path
 from urllib.parse import urlparse
 
-from app.config import DATABASE_URL
+from app.config import DATABASE_URL, DEBUG
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("DEBUG", "1") == "1"
+DEBUG = DEBUG
 INSTALLED_APPS = [
     "app.apps.BlogAppConfig",
 ]

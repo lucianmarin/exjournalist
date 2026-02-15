@@ -1,0 +1,18 @@
+{
+    "lang": "en",
+    "name": "Exjournalist",
+    "short_name": "Exjournalist",
+    "description": "Hacker News for writers.",
+    "icons": [
+        {
+            "src": "/static/192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "status": "ok"
+}

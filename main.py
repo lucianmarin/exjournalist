@@ -25,7 +25,8 @@ django.setup()
 from app.models import Article, ArticleVote, Category, Comment, User
 
 app = falcon.App()
-app.add_static_route("/static", Path("static").absolute())
+if settings.DEBUG:
+    app.add_static_route("/static", Path("static").absolute())
 AUTH_COOKIE_NAME = "auth"
 AUTH_MAX_AGE_SECONDS = 60 * 60 * 24 * 365  # 1 year
 
@@ -110,6 +111,7 @@ def time_ago_filter(value) -> str:
 
 templates.filters["markdown"] = markdown_filter
 templates.filters["time_ago"] = time_ago_filter
+templates.globals["v"] = 1  # Version for cache busting static assets
 
 
 def render_html(req: falcon.Request, resp: falcon.Response, template_name: str, context: dict) -> None:
