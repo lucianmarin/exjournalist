@@ -3,38 +3,22 @@
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block content %}
-<article class="card">
-  <h2>{{ article.title }}</h2>
-  <div class="meta">
-    <span>{{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
-    <a href="/users/{{ article.author.username }}">{{ article.author.emoji }} @{{ article.author.username }}</a>
-    <a href="/categories/{{ article.category.name }}" class="tag">{{ article.category.name }}</a>
-  </div>
+{% include "article_card.html" %}
 
+<section class="votes">
   {% if current_user and current_user.id == article.author_id %}
-    <p><a href="/articles/{{ article.id }}/edit">Edit Article</a></p>
+    <p>Score: {{ article.likes_count - article.dislikes_count }} (👍 {{ article.likes_count }} / 👎 {{ article.dislikes_count }})</p>
+  {% elif current_user %}
+    <form method="post" action="/articles/{{ article.id }}/vote">
+      <button class="vote-btn {% if user_vote == 1 %}active-like{% endif %}" type="submit" name="vote" value="like">👍 Like ({{ article.likes_count }})</button>
+      <button class="vote-btn {% if user_vote == -1 %}active-dislike{% endif %}" type="submit" name="vote" value="dislike">👎 Dislike ({{ article.dislikes_count }})</button>
+    </form>
+  {% else %}
+    <p>Please <a href="/login?next=/articles/{{ article.id }}">login</a> to vote.</p>
   {% endif %}
+</section>
 
-  <p><strong>{{ article.author.full_name }}</strong></p>
-  {% if article.author.description_markdown %}
-    <div class="markdown-body user-description">{{ article.author.description_markdown | markdown }}</div>
-  {% endif %}
-
-  <div class="markdown-body">{{ article.content_markdown | markdown }}</div>
-
-  <section class="votes">
-    {% if current_user and current_user.id == article.author_id %}
-      <p>Score: {{ article.likes_count - article.dislikes_count }} (👍 {{ article.likes_count }} / 👎 {{ article.dislikes_count }})</p>
-    {% elif current_user %}
-      <form method="post" action="/articles/{{ article.id }}/vote">
-        <button class="vote-btn {% if user_vote == 1 %}active-like{% endif %}" type="submit" name="vote" value="like">👍 Like ({{ article.likes_count }})</button>
-        <button class="vote-btn {% if user_vote == -1 %}active-dislike{% endif %}" type="submit" name="vote" value="dislike">👎 Dislike ({{ article.dislikes_count }})</button>
-      </form>
-    {% else %}
-      <p>Please <a href="/login?next=/articles/{{ article.id }}">login</a> to vote.</p>
-    {% endif %}
-  </section>
-</article>
+<div class="markdown-body">{{ article.content_markdown | markdown }}</div>
 
 <section id="comments" class="card">
   <h3>Comments</h3>

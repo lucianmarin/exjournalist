@@ -12,7 +12,7 @@ import markdown
 from cryptography.fernet import Fernet, InvalidToken
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup
 from markdown.extensions import Extension
@@ -234,6 +234,7 @@ class IndexResource:
         articles = list(
             Article.objects.select_related("author")
             .select_related("category")
+            .annotate(comment_count=Count("comments"))
             .order_by("-created_at")
         )
 
@@ -263,6 +264,7 @@ class UserDetailResource:
             Article.objects.filter(author_id=user.id)
             .select_related("author")
             .select_related("category")
+            .annotate(comment_count=Count("comments"))
             .order_by("-created_at")
         )
         render_html(
@@ -287,6 +289,7 @@ class CategoryDetailResource:
             Article.objects.filter(category_id=category.id)
             .select_related("author")
             .select_related("category")
+            .annotate(comment_count=Count("comments"))
             .order_by("-created_at")
         )
         render_html(
@@ -414,6 +417,7 @@ class ArticleDetailResource:
         article = (
             Article.objects.select_related("author")
             .select_related("category")
+            .annotate(comment_count=Count("comments"))
             .filter(id=article_id)
             .first()
         )

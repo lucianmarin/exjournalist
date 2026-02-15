@@ -1,0 +1,22 @@
+<article class="card">
+    <div class="big">{{ article.comment_count }}</div>
+    <h2>
+        <a class="category" href="/categories/{{ article.category.name }}">{{ article.category.name }}</a>
+        <a href="/articles/{{ article.id }}">{{ article.title }}</a>
+    </h2>
+    <div class="small">
+        {% if current_user and current_user.id == article.author_id %}
+            <a href="/articles/{{ article.id }}/edit">edit</a>
+        {% endif %}
+        <span>comments</span>
+    </div>
+    <div class="meta">
+        <span>{{ article.created_at.strftime('%B %d, %Y') }}</span>
+        by
+        <a href="/users/{{ article.author.username }}">
+        {{ article.author.emoji }} @{{ article.author.username }}
+        </a>
+        <span>{{ article.likes_count }} likes</span>
+        <span>{{ article.dislikes_count }} dislikes</span>
+    </div>
+</article>
