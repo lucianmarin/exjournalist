@@ -13,7 +13,6 @@
           <summary>Reply</summary>
           <form method="post" action="/articles/{{ article_id }}/comments" class="form-grid">
             <input type="hidden" name="parent_id" value="{{ comment.id }}">
-            <p class="hint">Replying as {{ current_user.emoji }} @{{ current_user.username }}</p>
             <label>Reply (Markdown)
               <textarea name="content_markdown" rows="3" required></textarea>
             </label>

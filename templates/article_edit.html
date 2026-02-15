@@ -12,15 +12,13 @@
       <input type="text" name="title" required maxlength="255" value="{{ article.title }}">
     </label>
 
-    <label>Content (Markdown)
-      <textarea name="content_markdown" rows="14" required>{{ article.content_markdown }}</textarea>
-    </label>
-
     <label>Category
       <input type="text" name="category_name" required value="{{ article.category.name }}">
     </label>
 
-    <p class="hint">Category supports letters only (`a-z`) and is stored in lowercase.</p>
+    <label>Content (Markdown)
+      <textarea name="content_markdown" rows="14" required>{{ article.content_markdown }}</textarea>
+    </label>
 
     <button type="submit">Save Changes</button>
   </form>

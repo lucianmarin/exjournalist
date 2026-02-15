@@ -1,6 +1,6 @@
 :root {
   --regular: 16px;
-  --bg: #f6f8fb;
+  --bg: #f0f0f0;
   --card: #ffffff;
   --line: #e4e8ef;
   --text: #1a2433;
@@ -16,6 +16,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  border: 0 none;
 }
 
 body {
@@ -131,28 +132,29 @@ input, textarea, button, select {
 }
 
 .form-grid {
-  display: grid;
-  gap: 0.8rem;
+  overflow: hidden;
 }
 
 input,
 textarea,
 select {
   width: 100%;
-  margin-top: 0.25rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 0.55rem 0.65rem;
-  background: #fff;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: var(--white);
 }
 
 button {
   border: 1px solid var(--primary);
-  color: #fff;
+  color: var(--white);
   background: var(--primary);
-  border-radius: 8px;
-  padding: 0.5rem 0.8rem;
+  padding: 5px 0;
   cursor: pointer;
+}
+
+button[type="submit"] {
+  float: right;
+  padding: 5px 10px;
 }
 
 .votes {
@@ -179,17 +181,17 @@ button {
   background: var(--dislike);
 }
 
-.comment {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.8rem;
-  margin: 0.8rem 0;
+#comments {
+  margin: 20px 0;
 }
 
-.children {
-  margin-left: 1.1rem;
-  padding-left: 0.8rem;
-  border-left: 2px solid var(--line);
+.comment-list, .children {
+  padding-left: 2px;
+  border-left: 2px solid var(--black);
+}
+
+.children .meta, .children .markdown-body, .children details {
+  padding-left: 13px;
 }
 
 .markdown-body p {
