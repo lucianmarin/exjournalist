@@ -1,5 +1,7 @@
 # Exjournalist
 
+![screenshot](screenshot.png)
+
 An online journaling and publishing platform built with:
 - **Falcon** (WSGI web framework)
 - **Django ORM** (PostgreSQL / SQLite database layer & migrations)
